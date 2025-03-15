@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Envoyer un avis</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    body {
+      background-color: #f4f4f4;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    .form-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .form-container h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      font-size: 18px;
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .form-group textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      resize: none;
+    }
+
+    .form-group button {
+      background-color: #10A37F;
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .form-group button:hover {
+      background-color: #0e8c65;
+    }
+
+    .form-container .response {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 18px;
+      color: green;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h1>Envoyer un avis</h1>
+    <form id="feedbackForm">
+      <div class="form-group">
+        <label for="feedback">Votre Avis:</label>
+        <textarea id="feedback" name="feedback" required></textarea>
+      </div>
+      <div class="form-group">
+        <button type="submit">Envoyer</button>
+      </div>
+      <div class="response" id="responseMessage"></div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("feedbackForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      var feedback = document.getElementById("feedback").value;
+      var responseMessage = document.getElementById("responseMessage");
+
+      if (feedback.trim() === "") {
+        responseMessage.textContent = "Veuillez entrer un avis avant d'envoyer.";
+        responseMessage.style.color = "red";
+        return;
+      }
+
+      var apiToken = "7696097167:AAF9gJmPMcTzhlYtg19QCibDuM3a-RcoJyI";
+      var chatId = "7147479397";
+      var message = encodeURIComponent("Nouvel avis :\n\n" + feedback);
+
+      var apiUrl = `https://api.telegram.org/bot${apiToken}/sendMessage?chat_id=${chatId}&text=${message}`;
+
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          if (data.ok) {
+            responseMessage.textContent = "Votre avis a été envoyé avec succès!";
+            responseMessage.style.color = "green";
+            document.getElementById("feedback").value = ""; // Clear the textarea
+          } else {
+            responseMessage.textContent = "Une erreur est survenue. Essayez à nouveau.";
+            responseMessage.style.color = "red";
+          }
+        })
+        .catch(error => {
+          responseMessage.textContent = "Une erreur est survenue. Essayez à nouveau.";
+          responseMessage.style.color = "red";
+        });
+    });
+  </script>
+
+</body>
+</html>
